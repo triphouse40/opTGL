@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Informations">
+      <UniqueIdentifier>{ff55317d-704f-471b-afef-21a87e04f31d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\VertexShaders">
+      <UniqueIdentifier>{896350fe-278b-4836-8b70-ea8d7dd43eb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FragmentShaders">
+      <UniqueIdentifier>{f69cc2ce-6b4f-43b7-9f8b-e4628f9facde}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="openGLTransformations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="openGL_info.txt">
+      <Filter>Informations</Filter>
+    </Text>
+    <Text Include="glfw_info.txt">
+      <Filter>Informations</Filter>
+    </Text>
+    <Text Include="glmInfo.txt">
+      <Filter>Informations</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="shades.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ranso.fs">
+      <Filter>Header Files\FragmentShaders</Filter>
+    </None>
+    <None Include="ranso.vert">
+      <Filter>Header Files\VertexShaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>

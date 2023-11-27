@@ -1,0 +1,29 @@
+GLFW -- IS A FRAMEWORK/API WRITTEN IN C WHICH YOU CAN USE TO CREATE AND MANAGE WINDOWS/OpenGL CONTEXTS, ENUMERATE MONITORS AND VIDEO MODES AS WELL AS HANDLE INPUTS SUCH AS KEYBOARD, MOUSE, JOYSTICK, CLIPBOARD AND TIME.
+GLAD -- IS A FRMAEWORK/API THAT PROVIDES PLATFORM SPECIFIC OpenGL POINTERS/FUNCTION POINTERS GENERATING PLATFORM-SPECIFIC CODE FOR LOADING OpenGL FUNCTIONS, MAKING IT EASIER TO USE IT IN A CROSS-PLATFORM MANNER
+
+glfwInit(void)                       --  This function initialises the GLFW library before most GLFW functions can be used and after it is initialized any time an 
+										 application closes GLFW should be terminated before the app cloes in order to free memory it allocated
+
+glfwTerminate(void)                  --  This function destroys all remaining windows and cursors, free all allocated memory.
+
+glfwWindowHint(int hint, int value)  --  This function sets hints for the next initialization of GLFW. The values hints are probably enums and the value correspongs to what the hint is supposed to be.Call it many times for different parameters/hints. Some hints are:
+											--- & GLFW_CONTEXT_VERSION_MINOR which tells openGL what version we are using e.g glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3) glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3) i.e openGL version 3.3
+											---hint(GLFW_OPENGL_PROFILE):
+												---GLFW_OPENGL_CORE_PROFILE -Defines that we should the openGL core profile with no deprecated features
+												---GLFW_OPENGL_COMPAT_PROFILE -Defines that we should the compatability profile
+												---GLFW_OPENGL_ANY_PROFILE -Defines that any profile should be used
+											---hint(GLFW_OPENGL_FORWARD_COMPAT)Specifies whether the OpenGL context should be forward-compatible, meaning only deprecated features are excluded. Values:
+												---GLFW_TRUE or GLFW_FALSE
+											---hint(GLFW_RESIZABLE) Specifies whether window/context can be resized. Values:
+												---GLFW_TRUE or GLFW_FALSE
+											--hint(GLFW_VISIBLE) Specifies whether the window will be initially visible. Values: 
+												---GLFW_TRUE or GLFW_FALSE
+											--hint(GLFW_DECORATED) Specifies whether the window will have window decorations, such as a border and close widget. Values:
+												---GLFW_TRUE or GLFW_FALSE
+											--hint(GLFW_SAMPLES) specifies the desired number of samples to use for multi-sampling. Value: an int
+											--hint(GLFW_REFRESH_RATE) Specifies the desired refresh rate of the window in Hz. Value: Use 60 for a start
+
+glfwSwpbuffers(GLFWwindow* window)  --  This function swaps the front and back buffers of the specified window. If the swap interval is greater than 0, the GPU driver waits the specified number of screen updates before swapping the buffers
+
+glfwPollEvents()                    -- Processes all pending events.
+												

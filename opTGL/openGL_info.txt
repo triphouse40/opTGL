@@ -1,0 +1,401 @@
+buffer -- Is a region of memory used to temporarily hold data while it is being moved from one place to another. It is used to compensate for the differnce in speed
+		  between two processes that exchange data
+	      e.g A bus transporting people from a school to a store, not all the students will get on the bus but everytime the bus delivers 
+		  the srudents the the next batch of students enter
+
+Vertex Buffer Object  --  A vertex buffer object(VBO) is an array/buffer where we can store information about vertexes(e.g position, color, normal) on the gpu ram. 
+						  It let's you group together information about the vertices you want to use for a particular shape. e.g You don't need to always give the vertex 
+						  data of the same shape, just make openGL call for it. It is an efficient way of storing the 'building blocks' of something you wish to make(stores attribute data)
+
+Vertex Array Object   --  A vertex array object(VAO) is an array where you can store VAO's, EBO's for example. VAO's act as a co-ordinator as they store information about 
+						  a certain object you want to make from the 'building blocks' from the VBO and how you ant to draw/make them with the EBO. It sort of is like a blueprint for
+						  the final object you wish to make it look like
+
+Element Array Object  --  An element array object(EBO) is an array where you can store how you want the object to be built. You specify how you want with the vertexes in the VBO
+						  how they should be built. In the EBO you store the indices of the VBO's in the order you want them drawn/rendered. 
+
+Render -- The process of generating an image from a 2d or 3d model by means of a computer. The resulting image is known as a render.(image synthesis)
+
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); :
+
+		glBufferData is a function specifically targeted to copy user-defined data into the currently bound buffer. 
+		Its first argument is the type of the buffer we want to copy data into: the vertex buffer object currently 
+		bound to the GL_ARRAY_BUFFER target. The second argument specifies the size of the data (in bytes) we want to 
+		pass to the buffer; a simple sizeof of the vertex data suffices. The third parameter is the actual data we 
+		want to send.
+
+		The fourth parameter specifies how we want the graphics card to manage the given data. 
+		This can take 3 forms:
+			GL_STREAM_DRAW: the data is set only once and used by the GPU at most a few times.
+			GL_STATIC_DRAW: the data is set only once and used many times.
+			GL_DYNAMIC_DRAW: the data is changed a lot and used many times.
+
+
+		The position data of the triangle does not change, is used a lot, and stays the same for every render call 
+		so its usage type should best be GL_STATIC_DRAW. If, for instance, one would have a buffer with data that is 
+		likely to change frequently, a usage type of GL_DYNAMIC_DRAW ensures the graphics card will place the data in
+		memory that allows for faster writes.
+
+
+@---glGenVertexArrays(GLsizei n, GLuint *array(s)) Just generates vertex array object name(s)
+--Params:
+	n       --  Specifies the number of vertex array objects to generate
+	arrays  --  Specifies an array in which the generated vertex array object names are stored
+
+@---glGenBuffers(GLsizei n, GLuint *buffer(s)) Just generates buffer object name(s)
+--Params:
+	n       --  Specifies the number of buffer objects to generate
+	buffers  --  Specifies an array in which the generated buffer object names are stored
+
+@---glBindVertexArray(GLuint array) binds a vertex rray object. When you bind a VAO, you will make that VAO the currently active one 
+				as of the time of binding it
+--Params:
+	array  --  Specifies the name of the VAO to bind
+
+@---glBindBuffer(GLenum target, GLuint array) binds a buffer object to a specified binding point(array) making it the currently bound 
+				VBO with that specific target??
+--Params:
+	target  --  Specifies the target to which the buffer object(e.g VBO, EBO) is bound. For the targets (Check for the line Buff_Targs)
+	buffer  --  Specifies the name of the buffer
+
+@---glBufferData(GLenum target, GLsizeptr size, const void *data, GLenum usage) creates and initialzes a buffer objects data(basically a data store for the vurrent bound buffer *targ). 
+				I think this is where you associate the raw data(e.g vertex (input step1 of the graphics pipeline) to a Buffer object like the VBO and EBO
+--Params:
+	target  --  Specifies the target to which the buffer object(e.g VBO, EBO) is bound. For the targets (Check for the line Buff_Targs)
+	size    --  Specifies the size in bytes of the buffer object's war data
+	data    --  Specifies a pointer to the data that will be copied into the data store. Null if you want nothing to be copied
+	usage   --  Specifies the expected usage of the data store. Should be any of these (Check for Usage_Targs)
+
+@---glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void * pointer) specify the format of the vertex data stored in the VBO
+				Tells openGL how to interpret the data and how it corresponds to vertex attributes
+--Params:
+	index       --  Specifies the index of the generic vertex attribute to be modified. It corresponds to the layout location in the vertex shader where the attribute is declared
+	size        --  Specifies the number of components per generic vertex attribute(every one point/vertex). Must be either 1, 2, 3 or 4(3 represents 3d(x, y, z), 4 represents 3d with alpha values)
+	type        --  Specifies the type of data of each component in the array. The symbolic comstants GL_BYTE, GL_UNSIGNED_BYTE, GL_SHORT, GL_UNSIGNED_SHORT, GL_INT, and GL_UNSIGNED_INT, GL_HALF_FLOAT, GL_FLOAT, GL_DOUBLE, GL_FIXED, GL_INT_2_10_10_10_REV, GL_UNSIGNED_INT_2_10_10_10_REV and GL_UNSIGNED_INT_10F_11F_11F_REV are accpeted
+	normalized  --  Specifies whether the data should be normalized. If 'GL_TRUE' interger data is normalized to the range[-1,1](for signed int/types) or range[0,1](for unsigned types) when it is accessed. If 'GL_FALSE' integer data is directly converted to floating-point numbers
+	stride      --	Specifies the byte offset between consecutive generic vertex attributes.If the vertex data is tightly packed(no extra padding between attributes) you can set it to 0. Just the length/size of a single vertex(x, y, z positions normals, textures, colors e.g)
+	pointer     --  Specifies offest within the buffer object's data store where the vertex data begins. It is a pointer to the first component of the first generic vertex attribute in the array in the data that is currently bound to the GL_ARRAY_BUFFER target. The initial value is 0.Just a pointer number to the first vertex
+
+@---glEnableVertexAttribArray(GLuint index &&  || GLuint vaobj) Enable's a generic vertex attribute array specified by index, If with a vaobj it updates the state of the vertex array object with ID vaobj.
+Params:
+	vaobj  --  Specifies the id of the VAO
+	index  --  Specifies the index of the generic vertex attribute to be enabled
+
+@---glDisableVertexAttribArray(GLuint index &&  || GLuint vaobj) Disables's a generic vertex attribute array specified by index, If with a vaobj it updates the state of the vertex array object with ID vaobj.
+Params:
+	vaobj  --  Specifies the name/id of the VAO
+	index  --  Specifies the index of the generic vertex attribute to be disabled
+
+Vectex shader:
+		A vertex shader is a graphics processing function used to add special
+		effects to objects in a 3d environment by performing mathematical operations
+		on the objects vertex data. Each vertex can be defined by many different
+		variables
+		--All about defining the properties of a vertex e.g color, position, texture co-ordinates, normals
+			(In the context of OpenGL or similar graphics APIs, 
+			you write a vertex shader to define how these properties 
+			are transformed and manipulated before being passed on to 
+			the next stages of the graphics pipeline. The shader takes in 
+			input attributes (like vertex positions, colors, normals, etc.), processes them, and outputs the transformed properties, including the final vertex position (usually in clip space coordinates) 
+			that will be used in subsequent stages of rendering.)
+	   
+
+Fragment shader: 
+		A fragment shader is the Shader stage that will process a fragmant generated 
+		by the Rasterization into a set of colors and a single depth value. The fragment
+		shader is the OpenGL pipeline stage after a primitive is rasterized. For each
+		sample of the pixels covered by a primitive, a 'fragment' is generated.
+		--All about calculating the final color output of a pixel
+
+
+		@---glCreateShader(GLenum shaderType) creates an empty shader object and returns an id of non-zero(0 is for errors). You have to specify what type of shader object it must create. 
+		--Params:
+			shaderType  --  The values must be one of these -GL_COMPUTE_SHADER, GL_VERTEX_SHADER, GL_TESS_CONTROL_SHADER, GL_TESS_EVALUATION_SHADER, GL_GEOMETRY_SHADER, or GL_FRAGMENT_SHADER
+
+		@---glShaderSource(GLuint shader, GLsizei count, const GLchar **string, const GLint *length) sets the source code from the shader source to the empty shader object created explicitly.
+		--Params:
+			shader  --  Specifies which shader source is to be set by. This is given by the id/reference number of the empty shader object
+			count   --  Specifies the number of elements in the string and length arrays
+			string  --  Specifies an array of pointers to strings containg the sorce code to be loaded into the shader. An array of pointers to strings containing the source code
+			length  --  Specifies an array of string lengths. If left NULL/or value less than 0 then it means it will be the length of the string will be however many characters 
+						there are in the string until it encounters a null terminator, but if you specify a number above 0 it will only read characters from the first character to the character which 
+						is at the index of your number
+
+		@---glCompileShader(GLuint shader) Compiles the source code strings that have been stored in the shader object specified by shader
+		--Params:
+			shader  -- Specifies the shader object to be compiled
+
+		@---glGetShaderiv(GLuint shader, GLenum pname, GLint *params) return a parameter from a shader object. The results vary from what type of pname you give
+		--Params:
+			shader  --  Specifies the shader object to be queried
+			pname   --  Specifies the object parameter. It has to be any one of these - GL_SHADER_TYPE, GL_DELETE_STATUS, GL_COMPILE_STATUS, GL_INFO_LOG_LENGTH, GL_SHADER_SOURCE_LENGTH
+			params  --  Returns the requested object parameter from pname
+		    more info(check for the line that starts with ShaderIV)
+
+		@---glGetShaderLog(GLuint shader, GLsizei maxLength, Glsizei *length, GLchar *infoLog) Returns the information log for a specific shader object
+		--Params:
+			shader     --  Specifies the shader object whose info log is to be queried
+			maxLength  --  Specifies the size of the character buffer/string for storing the info in
+			length     --  Returns the length of the string returned in infoLog(excluding the null terminator)
+			infoLog    --  Specifies an array of characters that is used to reurn the information log
+
+		@---glCreateProgram(void) Creates an object to link/attch shaders together. You can also dettach certain shaders when you no longer need it. It will 
+				return an id/reference number to which yu can call it by
+
+		@---glAttachShader(Gluint program, Gluint shader) creates a complete shader program where all the neccessary shaders that need to be used are linked to a single/main program
+		--Params:
+			program  --  Specifies the program object to which the shaders need to be attached to
+			shader   --  Specifies the shader object that is to be attached
+
+		@---glLinkProgram(GLuint program) Links the program object specified by the parameter and create executes that will run on specific processes
+		--Params:
+			program  --  specifies the program object to be linked
+		
+		@---glGetProgramiv(GLuint program, GLenum pname, GLint *params) return the value of a specific param of a program object. The results vary from what type of pname you give
+		--Params:
+			program  --  Specifies the program object to be queried
+			pname   --  Specifies the object parameter. Explained later
+			params  --  Returns the requested object parameter from pname
+		    more info(check for the line that starts with ProgramIV)
+		
+		@---glad_glGetProgramInfoLog(GLuint program, GLsizei maxLength, Glsizei *length, GLchar *infoLog) same as glGetShaderLog() just replace the obvious parts
+
+		@---glDeleteShader(Gluint shader) basically undoes what glCreateShader does by freeing the memory it used
+
+Unbinding an object in openGL is done by using the bind function and setting it to 0.
+
+Colors in computer graphics are represented as an array of 4 values: 
+the red, green, blue and alpha (opacity) component, commonly 
+abbreviated to RGBA. When defining a color in OpenGL or GLSL we set 
+the strength of each component to a value between 0.0 and 1.0. If, 
+for example, we would set red to 1.0 and green to 1.0 we would get a 
+mixture of both colors and get the color yellow. 
+Given those 3 color components we can generate over 16 million different 
+colors!
+
+
+@---glClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) Specify clear values for the color buffers
+--Params:
+	red, green, blue  --  Specify the intensity in range[0.0, 1.0] for the rgb value for each
+	alpha             --  Specifies the transperency of the color. 0.0 means fully transparent while 1.0 means fully opaque(very visible)
+
+@---glClear(GLbitfield mask) clear buffers to preset values
+--Params:
+	mask  --  Bitwise OR of masks that indicate the buffers need to be cleared. The three masks are GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, GL_STENCIL_BUFFER_BIT. Each indicating their own bit buffer
+
+Shader Program:
+	A shader program object is the final linked version of multiple shaders combined
+	When linking the shaders into a program it links the outputs of each shader to the 
+	inputs of the next shader. This is also where you'll get linking errors if your outputs 
+	and inputs do not match.
+
+// this is function that specifies how openGL should interprate a vertex buffer whenever the draw function is invoked
+//It receives this instruction from the currently bound vertex array
+@---glVertexAttribPointer(GLuint index, Glint size, GLenum type, GLBoolean normalized, GLsozei stride, const void * pointer)
+--Params:
+	index       --  Specifies the index of the generic vertex attribute to be modified
+	size        --  Specifies the number of components/size of the vertex attribute. corresponds to either vec1 == 1, vec2 == 2, vec3 == 3, vec4 == 4  
+	type        --  Specifies the data type of each of the components/vectors in the array
+	normalized  --  Specifies whether fixed-point data values should be normalized(GL_TRUE) or converted directly as fixed-point values when they are accessed
+	stride      --  Specifies the space between consecutive vertex attributes/length of a single vertex in laymans terms
+	pointer     --  It is the offset of where the position data begins in the buffer.0 means at the start.
+
+Frame buffer:
+	In openGL rendering is done to the framebuffer. The framebuffer is a piece of memory that holds the color, depth, and stencil buffers
+	When you draw something, it gets drawn to the currently active framebuffer
+	
+Element Buffer Array(EBO) -- Stores the indices in an order you want for a particular vertex buffer array(VBO) which openGL decides to draw.
+
+@---glDrawArrays(GLenum mode, Glint first, GLsizei count) Specifies multiple geometric primitives(shape, lines .etc) with very few subroutine calls. Just draws with what is in the currently bound VAO
+			with the vertex input provided the desired shape
+--Params:
+	mode  --  Secifies what kind of primitive to render. Here are the primitives[GL_POINTS, GL_LINE_STRIP, GL_LINE_LOOP, GL_LINES, GL_LINE_STRIP_ADJACENCY, GL_LINES_ADJACECNY, 
+			  GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, GL_TRIANGLES, GL_TRIANGLE_STRIP_ADJACENCY, GL_TRIANGLES_ADJACENCY, GL_PATCHES]
+	first --  Specifies the starting index in the enabled arrays
+	count --  Specifies the number of indices to be rendered
+
+@---glDrawElements(GLenum type, GLsizei count, GLenum type, const void * indices)  Specifies multiple geometric primitives(shape, lines .etc) with very few subroutine calls. Just draws with what is in
+			the VAO but with indices on how to draw
+--Params:
+	mode     --  Secifies what kind of primitive to render. Here are the primitives[GL_POINTS, GL_LINE_STRIP, GL_LINE_LOOP, GL_LINES, GL_LINE_STRIP_ADJACENCY, GL_LINES_ADJACECNY, 
+	count    --  Specifies the number of elements to be rendered
+	type     --  Specifies the type of indices. Must be one of GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, GL_UNSIGNED_INT
+	indices  --  Specifies a pointer to the location of the array of indices
+
+@---glPolygonMode(GLenum face, GLenum mode) Controls the interpretation of polygons for rasterization. Just tells how openGL should show the final output as
+--Params:
+	face  --  Specifies the polygons that mode applies to. Must be GL_FRONT_AND_BACK for front- and back-facing polygons 
+	mode  --  Specifies how the polygons will be rasterized. Values must be either GL_POINT, GL_LINE, GL_FILL.
+
+Uniforms  -- Uniforms are a tyoe of cariable which does not change it's value during the rendering of a specific primitive or set of primitives(e.g triangles/group of triangles)
+			 To use them you have to set them up from the CPU side(I think before rendering).
+
+@---glGetUniformLocation(GLuint program, const GLchar *name)Returns an integer to the location of the uniform specified. Return -1 if the uniform is not found/(not int the active program), if name starts with "gl_" or if name is associated with openGL specific things
+		only works on the currently active program.
+--Params:
+	program  --  Specifies the program to be queried
+	name     --  A string of the name of the uniform.Has to be null terminated
+
+#There are several function overloads to it so one example per different func call#
+# 
+	(n) represents a number between 1 to 4. As you increase then number of params increase by n to. 
+	e.g glUniform1f(location, float value0), glUniform2f(location, float value0, float value1), ..., glUniform4f(location, float value0, float value1, float value2, float value3)
+#
+@---glUniform(n)f(GLint location, GLfloat v(n), ...)modifies/sets the value of the uniform specified.Only works in the program which is currently active with 'glUseProgram'.
+--Params:
+	location  --  Specifies the location of the uniform in the shaders on the currently active program
+	v(n)      --  Specifies the new values to be used for the specified uniform variable
+
+@---glUniform(n)i(GLint location, GLint v(n), ...)modifies/sets the value of the uniform specified.Only works in the program which is currently active with 'glUseProgram'.
+--Params:
+	location  --  Specifies the location of the uniform in the shaders on the currently active program
+	v(n)      --  Specifies the new values to be used for the specified uniform variable
+
+@---glUniform(n)ui(GLint location, GLuint v(n), ...)modifies/sets the value of the uniform specified.Only works in the program which is currently active with 'glUseProgram'.
+--Params:
+	location  --  Specifies the location of the uniform in the shaders on the currently active program
+	v(n)      --  Specifies the new values to be used for the specified uniform variable
+
+@---glUniform(n)fv(GLint location, GLsizei count, const GLfloat* value)modifies/sets the value of the uniform specified.Only works in the program which is currently active with 'glUseProgram'.
+--Params:
+	location  --  Specifies the location of the uniform in the shaders on the currently active program
+	count     --  For vector commands, specifies the number of elements to be modified.Should be 1 if not an array and 1 or more if it is an array
+	value     --  Specifies a pointer to an array of values for count that will be modified/set
+	
+@---glUniform(n)iv(GLint location, GLsizei count, const GLint* value)modifies/sets the value of the uniform specified.Only works in the program which is currently active with 'glUseProgram'.
+--Params:
+	location  --  Specifies the location of the uniform in the shaders on the currently active program
+	count     --  For vector commands, specifies the number of elements to be modified.Should be 1 if not an array and 1 or more if it is an array
+	value     --  Specifies a pointer to an array of values for count that will be modified/set
+
+@---glUniform(n)uiv(GLint location, GLsizei count, const GLuint* value)modifies/sets the value of the uniform specified.Only works in the program which is currently active with 'glUseProgram'.
+--Params:
+	location  --  Specifies the location of the uniform in the shaders on the currently active program
+	count     --  For vector commands, specifies the number of elements to be modified.Should be 1 if not an array and 1 or more if it is an array
+	value     --  Specifies a pointer to an array of values for count that will be modified/set
+
+@---glUniformMatrix(n)fv(GLint location, GLsizei count, glboolean transpose, const GLfloat *value)modifies/sets the value of the uniform specified.Only works in the program which is currently active with 'glUseProgram'. 'n' can't be 1.
+--Params:
+	location   --  Specifies the location of the uniform in the shaders on the currently active program
+	count      --  For matrix commands, specifies the number of matrices to be modified.Should be 1 if not an array of matrices and 1 or more if it is an array of matrices
+	transpose  --  For matrix commands, specifies whether to transpose the matrix as the values are loaded into the uniform variable
+	value      --  Specifies a pointer to an array of values for count that will be modified/set
+
+@---glUniformMatrix(n)x(n)fv(GLint location, GLsizei count, glboolean transpose, const GLfloat *value)modifies/sets the value of the uniform specified.Only works in the program which is currently active with 'glUseProgram'. 'n' can't be 1 and n can't be the same number. n can be 2 or 3 or 4.
+--Params:
+	location   --  Specifies the location of the uniform in the shaders on the currently active program
+	count      --  For matrix commands, specifies the number of matrices to be modified.Should be 1 if not an array of matrices and 1 or more if it is an array of matrices
+	transpose  --  For matrix commands, specifies whether to transpose the matrix as the values are loaded into the uniform variable
+	value      --  Specifies a pointer to an array of values for count that will be modified/set
+
+ShaderIV[
+	GL_SHADER_TYPE
+	params returns GL_VERTEX_SHADER if shader is a vertex shader object, and GL_FRAGMENT_SHADER if shader is a fragment shader object.
+
+	GL_DELETE_STATUS
+	params returns GL_TRUE if shader is currently flagged for deletion, and GL_FALSE otherwise.
+
+	GL_COMPILE_STATUS
+	params returns GL_TRUE if the last compile operation on shader was successful, and GL_FALSE otherwise.
+
+	GL_INFO_LOG_LENGTH
+	params returns the number of characters in the information log for shader including the null termination character (i.e., 
+	the size of the character buffer required to store the information log). If shader has no information log, a value of 0 is returned.
+
+	GL_SHADER_SOURCE_LENGTH
+	params returns the length of the concatenation of the source strings that make up the shader source for the shader, including the null 
+	termination character. (i.e., the size of the character buffer required to store the shader source). If no source code exists, 0 is returned.
+]
+
+ProgramIV[
+	GL_ACTIVE_ATTRIBUTES
+	params returns the number of active attribute variables for program.
+
+	GL_ACTIVE_ATTRIBUTE_MAX_LENGTH
+	params returns the length of the longest active attribute name for program, including the null termination character (i.e., the size of the character buffer required to store the longest attribute name). If no active attributes exist, 0 is returned.
+
+	GL_ACTIVE_UNIFORM_BLOCKS
+	params returns the number of uniform blocks for program containing active uniforms.
+
+	GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH
+	params returns the length of the longest active uniform block name for program, including the null termination character (i.e., the size of the character buffer required to store the longest uniform block name). If no active uniform blocks exist, 0 is returned.
+
+	GL_ACTIVE_UNIFORMS
+	params returns the number of active uniform variables for program.
+
+	GL_ACTIVE_UNIFORM_MAX_LENGTH
+	params returns the length of the longest active uniform variable name for program, including the null termination character (i.e., the size of the character buffer required to store the longest uniform variable name). If no active uniform variables exist, 0 is returned.
+
+	GL_ATTACHED_SHADERS
+	params returns the number of shader objects attached to program.
+
+	GL_DELETE_STATUS
+	params returns GL_TRUE if program is currently flagged for deletion, and GL_FALSE otherwise.
+
+	GL_INFO_LOG_LENGTH
+	params returns the number of characters in the information log for program including the null termination character (i.e., the size of the character buffer required to store the information log). If program has no information log, a value of 0 is returned.
+
+	GL_LINK_STATUS
+	params returns GL_TRUE if the last link operation on program was successful, and GL_FALSE otherwise.
+
+	GL_PROGRAM_BINARY_RETRIEVABLE_HINT
+	params returns the current value of whether the binary retrieval hint is enabled for program.
+
+	GL_TRANSFORM_FEEDBACK_BUFFER_MODE
+	params returns a symbolic constant indicating the buffer mode used when transform feedback is active. This may be GL_SEPARATE_ATTRIBS or GL_INTERLEAVED_ATTRIBS.
+
+	GL_TRANSFORM_FEEDBACK_VARYINGS
+	params returns the number of varying variables to capture in transform feedback mode for the program.
+
+	GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH
+	params returns the length of the longest variable name to be used for transform feedback, including the null-terminator.
+
+	GL_VALIDATE_STATUS
+	params returns GL_TRUE or if the last validation operation on program was successful, and GL_FALSE otherwise.
+]
+
+Buff_Targs [
+	GL_ARRAY_BUFFER	             --   Vertex attributes
+	GL_ATOMIC_COUNTER_BUFFER	 --   Atomic counter storage
+	GL_COPY_READ_BUFFER			 --	  Buffer copy source
+	GL_COPY_WRITE_BUFFER		 --	  Buffer copy destination
+	GL_DISPATCH_INDIRECT_BUFFER	 --	  Indirect compute dispatch commands
+	GL_DRAW_INDIRECT_BUFFER		 --	  Indirect command arguments
+	GL_ELEMENT_ARRAY_BUFFER		 --	  Vertex array indices
+	GL_PIXEL_PACK_BUFFER		 --	  Pixel read target
+	GL_PIXEL_UNPACK_BUFFER		 --	  Texture data source
+	GL_QUERY_BUFFER				 --	  Query result buffer
+	GL_SHADER_STORAGE_BUFFER	 --	  Read-write storage for shaders
+	GL_TEXTURE_BUFFER			 --	  Texture data buffer
+	GL_TRANSFORM_FEEDBACK_BUFFER --	  Transform feedback buffer
+	GL_UNIFORM_BUFFER			 --	  Uniform block storage
+]
+
+Usage_Targs [
+	GL_STREAM_DRAW   --  This pattern suggests that the data store contents are specified every frame and used many times by the 
+						 app for OpenGL's drawing commands. It's optimized for objects that change frequently and are used for redering every frame.
+	
+	GL_STREAM_READ   --  Indicates that the data store contents are specified every frame and used many times as the source of read-only 
+						 OpenGL commands. It's optimized for objects that change frequently and are read often
+	
+	GL_STREAM_COPY   --  Indicates that the data store contents are specified every frame by the app and used many times for the copy OpenGL commands
+						 It's optimized for objects that change frequently and are used as the source of copying data to other buffer objects every frame.
+	
+	GL_STATIC_DRAW   --  This pattern suggests that the data store contents are specified once and used many times by the 
+						 app source for OpenGL's drawing commands. It's optimized for objects that don't change frequently. 
+
+	GL_STATIC_READ   --  Indicates that the data store contents are specified once and used by the app many times as the source of read-only 
+						 OpenGL commands. It's optimized for objects frequently read but not modified
+
+	GL_STATIC_COPY   --  Specifies that the data store contents are specified once and used many times for the source of copy operations
+						 It's optimized for objects that are used frequently as the source of copying data to other buffer objects.
+
+	GL_DYNAMIC_DRAW  --  This pattern indicates that the data store contents are specified repeatedly and used many times as the 
+						 app source for OpenGL's drawing commands. It's optimized for objects that change occasionally but are used frequently for rendering.
+
+	GL_DYNAMIC_READ  --  Specifies that the data store contents are specified repeatedly by the app many times as the source of read-only 
+						 OpenGL commands. It's optimized for objects frequently read and modified occasionaly
+
+	GL_DYNAMIC_COPY  --  Indicates that the data store contents are specified repeatedly by the app for the source of copy operations
+						 It's optimized for objects that change frequently and are used as the source of copying data to other buffer objects.
+]

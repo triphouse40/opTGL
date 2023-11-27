@@ -1,0 +1,27 @@
+GLM(OpenGL Mathematics) is a math library for doing graphics programming. It provides a collection of functions and classes for performing
+various mathematical operations commonly needed in graphics programming, such as vectors, matrices, and transformations.
+When working with some of the functions it requires you provide a data type to be returned without a varaible declaratoion
+Some of its functions are(use the namespace glm::'func/type'):
+
+For transformations:
+@---glm::mat4 glm::translate(const glm::mat4 *matrix, const glm::vec3 &translation) || glm::mat4 glm::translate(const glm::vec3 &translation)
+		The function returns a 4x4 matrix whereby the original/used matrix is translated(moved) by a given translation vector
+--Params:
+	matrix		 --  A pointer to the matrix that is to be manipulated(is gonna be moved)
+	translation  --  A pointer to a vec3 which contaions the value of the translation
+
+For rotation:
+@---glm::mat4 glm::rotate(const glm::mat4 *matrix, float angle, const glm::vec3 *axis) || glm::mat4 glm::rotate(float angle, const glm::vec3 *axis)
+		The functions returns a 4x4 matrix whereby the original/used matrix is rotated by how many degrees provided
+--Params:
+	matrix  --  A pointer to the matrix that is to be manipulated(by rotation)
+	angle   --  Specifies how many degrees the matrix is to be rotated
+	axis    --  A pointer to a vec3 specifying which axis(x, y, z) the rotation should be applied
+
+For scaling:
+@---glm::mat4 glm::scale(const glm::mat4 *matrix, const glm::vec3 *scale) || glm::mat4 glm::scale(const glm::vec3 *scale)
+		The function returns a 4x4 matrix whereby the original/used matrix is scaled(shrinked/grows) by a given scaler
+--Params:
+	matrix  --  A pointer to the matrix that is to be manipulated(by being scaled)
+	scale   --  A pointer to the value(s) for how much the components are supposed to shrink or grow
+
